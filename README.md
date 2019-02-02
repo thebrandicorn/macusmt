@@ -13,12 +13,12 @@ Capture State Script\
 Parameter 4:  USMT Folder\
 Parameter 5:  Email\
 Parameter 6:  Don't Capture This User:\
-Parameter 7:  Don't Capture This User:\
+Parameter 7:  Don't Capture This User:
 
 
 Restore State Script\
 Parameter 4:  USMT Folder\
-Parameter 5:  Email\
+Parameter 5:  Email
 
 # Setting up the USMT Package
 There are two other scripts in this repo. Use Composer to make a package to place these two scripts in /private/var/USMT. If you don't want to use the email functionality then you can choose to not include the python script.
