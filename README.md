@@ -7,7 +7,7 @@ The restore state mounts the sparsebundle image and copies the data in the /User
 
 # Setting up the Scripts
 Upload these scripts into your Jamf Pro instance.
-In our deployment we have a campus wide USMT share with sub-folders for each department. When looking at the variables you will see SERVERSHARE and USMTDEPT. Set SERVERSHARE to your campus-wide share. USMTDEPT will be set within the policies used to send out these scripts. Set the following parameter values in the Options tab. Make sure the scripts are set to run After other policy items.
+In our deployment we have a campus wide USMT share with sub-folders for each department. When looking at the variables you will see SERVERSHARE and USMTDEPT. Set SERVERSHARE to your campus-wide share. USMTDEPT will be set within the policies used to send out these scripts. There are SMTP variables that will need to be set as well if you intend to use the email notifications feature. If you don't wat to use the email notifications, then set theReceiver variable to "". This will ensure that emails aren't sent. Set the following parameter values in the Options tab. Make sure the scripts are set to run After other policy items.
 
 Capture State Script\
 Parameter 4:  USMT Folder\
