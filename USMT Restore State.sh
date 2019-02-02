@@ -1,9 +1,16 @@
 #!/bin/bash
 
-
 #Global Variables - 
 #Replace servershare.acme.org with your organizations server share
 SERVERSHARE="servershare.acme.org"
+#Replace SMTP variables with your orgs info
+pythonScriptPath="/private/var/USMT/pythonEmail.py"
+theSender='SenderEmail@acme.org'
+theSubject='Mac USMT Status'
+smtpHost='smtp.acme.org'
+smtpUserName=''
+smtpPassword=''
+smtpPort='25'
 
 #username is used as a placeholder so that MacOS won't default to mapping the drive as the logged in user. It can be left
 NETWORKUSER="username"
@@ -79,16 +86,10 @@ done
 
 #Send Email Here
 #setup the python script input parameters
-pythonScriptPath="/private/var/USMT/pythonEmail.py"
-theSender='MacUSMT@missouri.edu'
-theSubject='Mac USMT Status'
 theBody="Some body text
 
 User State Restore Complete on: $COMPNAME"
-smtpHost='smtpinternal.missouri.edu'
-smtpUserName=''
-smtpPassword=''
-smtpPort='25'
+
 
 #Sends email if variable is set
 if [ ! -z "$theReceiver" ]
