@@ -10,7 +10,7 @@ Upload these scripts into your Jamf Pro instance.
 In our deployment we have a campus wide USMT share with sub-folders for each department. When looking at the variables you will see SERVERSHARE and USMTDEPT. Set SERVERSHARE to your campus-wide share. USMTDEPT will be set within the policies used to send out these scripts. Set the following parameter values in the Options tab. Make sure the scripts are set to run After other policy items.
 
 Capture State Script
-Parameter 4:  USMT Folder
+Parameter 4:  USMT Folder\
 Parameter 5:  Email
 Parameter 6:  Don't Capture This User:
 Parameter 7:  Don't Capture This User:
