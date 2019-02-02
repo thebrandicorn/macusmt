@@ -1,13 +1,23 @@
 #!/bin/bash
 
+#Global Variables - 
+#Replace servershare.acme.org with your organizations server share
+SERVERSHARE="servershare.acme.org"
 
+#username is used as a placeholder so that MacOS won't default to mapping the drive as the logged in user. It can be left
 NETWORKUSER="username"
+
+#Variables passed in by Jamf
 COMPNAME="$2"
 USERNAME="$3"
 USMTDEPT="$4"
 theReceiver="$5"
 SKIPUSER1="$6"
 SKIPUSER2="$7"
+
+#Maps network drive
+echo "Mounting Drive"
+osascript -e "try" -e "mount volume \"smb://$NETWORKUSER@$SERVERSHARE/$USMTDEPT\"" -e "end try"
 
 #Maps network drive
 echo "Mounting Drive"
