@@ -3,6 +3,7 @@
 #Global Variables - 
 #Replace servershare.acme.org with your organizations server share
 SERVERSHARE="servershare.acme.org"
+
 #Replace SMTP variables with your orgs info
 pythonScriptPath="/private/var/USMT/pythonEmail.py"
 theSender='SenderEmail@acme.org'
@@ -54,32 +55,44 @@ done
 echo "Sparse Bundle Mounted"
 sleep 2
 
-mkdir /private/var/USMT/TM
-chmod -R 777 /private/var/USMT
-sleep 10
-cp -r /Volumes/untitled/Backups.backupdb/$RESTOREFOLDER/Latest/ /private/var/USMT/TM 2>> /private/var/USMT/usmt.log
-echo "Done moving to Temp location"
-sleep 3
+#--------Move User Accounts----------------
 
+#for d in ... return /tmp/USMT/<folders>
+#cleanString() removes /tmp/USMT/ from the folder name string
+function cleanString()
+{
+	local entry=$1
+    echo "${entry/#?tmp?USMT?}"
+	
+}
+#Create symlink to remove excess filename characters to bug out cleanString()
+ln -s /Volumes/untitled/Backups.backupdb/$RESTOREFOLDER/Latest/Macintosh\ HD/Users /tmp/USMT
 
-#-----------------Test Area----------------
-
-echo "Moving Shared Folder"
-cp -Rf /private/var/USMT/TM/Macintosh\ HD/Users/Shared/ /Users/Shared
-rm -R /private/var/USMT/TM/Macintosh\ HD/Users/Shared
-NextFolder="$(sudo -u $USERNAME ls /private/var/USMT/TM/Macintosh\ HD/Users/ | head -1)"
-while [ "$NextFolder" != "" ]
-do
-	echo "Putting $NewFolder's home folder in place"
-    mv -f /private/var/USMT/TM/Macintosh\ HD/Users/$NextFolder/ /Users/$NextFolder/
-	/usr/local/jamf/bin/jamf createAccount -username $NextFolder -realname $NextFolder -password $NextFolder -home /Users/$NextFolder -shell /bin/bash
-	sleep 2
-	chown -R $NewFolder /Users/$NewFolder
-    #Removes Keychains to prevent problems on first sign-in
-    rm -R /Users/$NextFolder/Library/Keychains/
-	NextFolder="$(sudo -u $USERNAME ls /private/var/USMT/TM/Macintosh\ HD/Users/ | head -1)"
-	sleep 3
+#Traverses through the /Users dir in the sparsebundle, copies the folders, and make user accounts for all folders but Shared
+for d in "/tmp/USMT/"*/;
+	do
+    	NextFolder=$(cleanString $d)
+        NextFolder=${NextFolder%?}
+        echo "Handling Folder: $NextFolder"
+        if [ $NextFolder != "Shared" ]
+	then
+        echo "Putting home folder in place: $NextFolder"
+        cp -R /Volumes/untitled/Backups.backupdb/$RESTOREFOLDER/Latest/Macintosh\ HD/Users/$NextFolder /Users/$NextFolder
+        /usr/local/jamf/bin/jamf createAccount -username $NextFolder -realname $NextFolder -password $NextFolder -home /Users/$NextFolder -shell /bin/bash
+        sleep 2
+        chown -R $NextFolder /Users/$NextFolder
+        rm -R /Users/$NextFolder/Library/Keychains
+        else
+	echo "Moving Shared Folder"
+        cp -Rf /Volumes/untitled/Backups.backupdb/$RESTOREFOLDER/Latest/Macintosh\ HD/Users/$NextFolder /Users/$NextFolder
+        fi
+        
 done
+
+#Remove symlink
+	rm /tmp/USMT
+
+#----------------------------------
 
 #Disables Setup Assistant for all user accounts
 /usr/local/jamf/bin/jamf createSetupDone -suppressSetupAssistant
